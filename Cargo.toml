@@ -1,5 +1,5 @@
 [package]
-name = "shopify-install-app-in-rust"
+name = "app"
 version = "0.1.0"
 authors = ["shinichi kogai <kogai0121@gmail.com>"]
 edition = "2018"

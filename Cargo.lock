@@ -362,6 +362,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "app"
+version = "0.1.0"
+dependencies = [
+ "actix-session",
+ "actix-web",
+ "diesel",
+ "env_logger",
+ "graphql_client",
+ "hex",
+ "hmac",
+ "querystring",
+ "rand 0.8.3",
+ "serde",
+ "sha2",
+ "url",
+]
+
+[[package]]
 name = "ascii"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1763,24 +1781,6 @@ dependencies = [
  "cpuid-bool 0.1.2",
  "digest",
  "opaque-debug",
-]
-
-[[package]]
-name = "shopify-install-app-in-rust"
-version = "0.1.0"
-dependencies = [
- "actix-session",
- "actix-web",
- "diesel",
- "env_logger",
- "graphql_client",
- "hex",
- "hmac",
- "querystring",
- "rand 0.8.3",
- "serde",
- "sha2",
- "url",
 ]
 
 [[package]]
