@@ -1,0 +1,13 @@
+tunnels:
+  dev:
+    proto: http
+    hostname: fanhub.ngrok.io
+    addr: 127.0.0.1:5000
+
+    # -------------------------
+    # Additional options
+    # -------------------------
+    # auth: "username:password"
+    # host_header: rewrite
+    # inspect: true
+    # bind_tls: true
