@@ -1,3 +1,6 @@
+use diesel::prelude::*;
+// use self::diesel_demo::*;
+// use self::models::*;
 use actix_session::{CookieSession, Session};
 use actix_web::{
     client::Client, get, http::header, post, web, App, HttpRequest, HttpResponse, HttpServer,
@@ -7,6 +10,8 @@ use hmac::{crypto_mac::MacError, Hmac, Mac, NewMac};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
+use shopify_install_app_in_rust::models::*;
+use shopify_install_app_in_rust::*;
 use std::env;
 use url::Url;
 
@@ -180,6 +185,25 @@ async fn manual_hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // TODO: embed_migrations!
+    use shopify_install_app_in_rust::schema::posts::dsl::*;
+    let connection = establish_connection();
+    let _post = create_post(
+        &connection,
+        "my title",
+        "this is good post i've never wrote.",
+    );
+    let results = posts
+        // .filter(published.eq(true))
+        .limit(5)
+        .load::<Post>(&connection)
+        .expect("Error loading posts");
+    println!("Displaying {} posts", results.len());
+    for post in results {
+        println!("{}", post.title);
+        println!("----------\n");
+        println!("{}", post.body);
+    }
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
 
