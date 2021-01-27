@@ -1,6 +1,4 @@
 use diesel::prelude::*;
-// use self::diesel_demo::*;
-// use self::models::*;
 use actix_session::{CookieSession, Session};
 use actix_web::{
     client::Client, get, http::header, post, web, App, HttpRequest, HttpResponse, HttpServer,
@@ -195,7 +193,6 @@ async fn main() -> std::io::Result<()> {
         "this is good post i've never wrote.",
     );
     let results = posts
-        // .filter(published.eq(true))
         .limit(5)
         .load::<Post>(&connection)
         .expect("Error loading posts");

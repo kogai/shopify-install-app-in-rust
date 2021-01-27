@@ -1,0 +1,4 @@
+schema:
+  - https://graphql-schema-granted.myshopify.com/admin/api/2020-07/graphql.json:
+      headers:
+        X-Shopify-Access-Token: ${SHOPIFY_ADMIN_API_GRAPHQL_SCHEMA_SECRET}

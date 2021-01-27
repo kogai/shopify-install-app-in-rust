@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "apollo": "2.32.1",
     "ngrok": "3.4.0"
   }
 }

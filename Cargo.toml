@@ -18,3 +18,4 @@ env_logger = "0.8"
 hex = "0.4.2"
 querystring = "1.1.0"
 diesel = { version = "1.4.5", features = ["postgres"] }
+graphql_client = "0.9.0"

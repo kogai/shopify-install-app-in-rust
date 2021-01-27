@@ -1,0 +1,8 @@
+query charge($chargeID: ID!) {
+  node(id: $chargeID) {
+    __typename
+    ... on AppSubscription {
+      status
+    }
+  }
+}
