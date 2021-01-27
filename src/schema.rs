@@ -1,8 +1,6 @@
 table! {
-    posts (id) {
-        id -> Int4,
-        title -> Varchar,
-        body -> Text,
-        published -> Bool,
+    merchants (shop_domain) {
+        shop_domain -> Varchar,
+        access_token -> Varchar,
     }
 }
