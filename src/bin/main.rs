@@ -17,6 +17,7 @@ use url::Url;
 
 const APP_ID: &str = env!("SHOPIFY_APP_ID");
 const APP_SECRET: &str = env!("SHOPIFY_APP_SECRET");
+const APP_URL: &str = env!("APP_URL");
 
 type HmacSha256 = Hmac<Sha256>;
 
@@ -74,7 +75,7 @@ struct ShopifyStart {
 fn get_authorize_url(shop_domain: String, state: String) -> String {
     let tuples = vec![
         ("client_id", APP_ID),
-        ("redirect_uri", "https://fanhub.ngrok.io/shopify/done"),
+        ("redirect_uri", &format!("{}/shopify/done", APP_URL)),
         ("scope", "read_products"),
         ("state", &state),
     ];
