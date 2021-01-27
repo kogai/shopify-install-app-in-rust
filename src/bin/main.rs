@@ -12,10 +12,24 @@ use shopify_install_app_in_rust::models::*;
 use shopify_install_app_in_rust::*;
 use std::env;
 use url::Url;
+use graphql_client::GraphQLQuery;
 
 const APP_ID: &str = env!("SHOPIFY_APP_ID");
 const APP_SECRET: &str = env!("SHOPIFY_APP_SECRET");
 const APP_URL: &str = env!("APP_URL");
+
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "gql/schema.json",
+    query_path = "gql/charge_query.graphql",
+)]
+
+pub struct ChargeQuery;
+
+fn charge() {
+  ChargeQuery::build_query(charge_query::Variables{charge_id: "".to_owned()});
+}
 
 type HmacSha256 = Hmac<Sha256>;
 
@@ -71,9 +85,10 @@ struct ShopifyStart {
 }
 
 fn get_authorize_url(shop_domain: String, state: String) -> String {
+    let redirect_uri = format!("{}/shopify/done", APP_URL);
     let tuples = vec![
         ("client_id", APP_ID),
-        ("redirect_uri", &format!("{}/shopify/done", APP_URL)),
+        ("redirect_uri", &redirect_uri),
         ("scope", "read_products"),
         ("state", &state),
     ];

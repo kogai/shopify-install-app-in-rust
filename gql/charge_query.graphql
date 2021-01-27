@@ -1,4 +1,4 @@
-query charge($chargeID: ID!) {
+query ChargeQuery($chargeID: ID!) {
   node(id: $chargeID) {
     __typename
     ... on AppSubscription {
