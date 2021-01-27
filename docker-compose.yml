@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:12.2-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_DATABASE=example
+      - POSTGRES_PASSWORD=password
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # SMTP
+      - 8025:8025 # Dashboard
+    restart: always
+
+volumes:
+  pg_data:
