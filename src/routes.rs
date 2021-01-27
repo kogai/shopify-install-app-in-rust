@@ -24,7 +24,7 @@ const APP_URL: &str = env!("APP_URL");
 
 pub struct ChargeQuery;
 
-fn charge() {
+pub fn charge() {
   ChargeQuery::build_query(charge_query::Variables{charge_id: "".to_owned()});
 }
 

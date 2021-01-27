@@ -13,7 +13,7 @@ use std::env;
 const DATABASE_URL: &str = env!("DATABASE_URL");
 
 pub fn establish_connection() -> PgConnection {
-  PgConnection::establish(&DATABASE_URL).expect(&format!("Error connecting to {}", DATABASE_URL))
+  PgConnection::establish(&DATABASE_URL).unwrap()
 }
 
 // pub fn create_post<'a>(conn: &PgConnection, title: &'a str, body: &'a str) -> Post {
