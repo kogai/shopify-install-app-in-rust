@@ -1,9 +1,11 @@
 use super::schema::{charges, merchants};
+use diesel::debug_query;
 use diesel::pg::upsert::*;
-use diesel::pg::PgConnection;
+use diesel::pg::{Pg, PgConnection};
 use diesel::prelude::*;
+use diesel::*;
 
-#[derive(Queryable, Insertable, Debug, Identifiable)]
+#[derive(Queryable, Insertable, Debug, Identifiable, AsChangeset)]
 #[primary_key(shop_domain)]
 #[table_name = "merchants"]
 pub struct Merchant {
@@ -17,10 +19,15 @@ impl Merchant {
       shop_domain,
       access_token,
     };
-    diesel::insert_into(merchants::table)
+    let query = diesel::insert_into(merchants::table)
       .values(&instance)
       .on_conflict(on_constraint("shop_domain"))
-      .do_nothing()
+      .do_update()
+      .set(&instance);
+
+    println!("{}", debug_query::<Pg, _>(&query).to_string());
+
+    query
       .get_result::<Merchant>(conn)
       .expect("Error saving new merchant")
   }

@@ -114,7 +114,6 @@ pub async fn shopify_start(
                 .take(32)
                 .map(char::from)
                 .collect();
-            println!("My state={}", state);
             let request_uri = get_authorize_url(info.shop.clone(), state.clone());
             session.set("nonce", state).unwrap();
             HttpResponse::TemporaryRedirect()
