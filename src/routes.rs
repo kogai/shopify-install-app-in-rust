@@ -1,31 +1,34 @@
-use actix_session::{Session};
+use super::models::Merchant;
+use actix_session::Session;
 use actix_web::{
-    client::Client, get, http::header, post, web, HttpRequest, HttpResponse,
-    Responder,
+    client::Client, get, http::header, post, web, HttpRequest, HttpResponse, Responder,
 };
+use diesel::pg::PgConnection;
+use diesel::r2d2::{ConnectionManager, Pool};
+use graphql_client::GraphQLQuery;
 use hmac::{crypto_mac::MacError, Hmac, Mac, NewMac};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 use std::env;
 use url::Url;
-use graphql_client::GraphQLQuery;
 
 const APP_ID: &str = env!("SHOPIFY_APP_ID");
 const APP_SECRET: &str = env!("SHOPIFY_APP_SECRET");
 const APP_URL: &str = env!("APP_URL");
 
-
 #[derive(GraphQLQuery)]
 #[graphql(
     schema_path = "gql/schema.json",
-    query_path = "gql/charge_query.graphql",
+    query_path = "gql/charge_query.graphql"
 )]
 
 pub struct ChargeQuery;
 
 pub fn charge() {
-  ChargeQuery::build_query(charge_query::Variables{charge_id: "".to_owned()});
+    ChargeQuery::build_query(charge_query::Variables {
+        charge_id: "".to_owned(),
+    });
 }
 
 type HmacSha256 = Hmac<Sha256>;
@@ -152,6 +155,7 @@ pub struct ShopifyAccessTokenRes {
 pub async fn shopify_done(
     session: Session,
     info: web::Query<ShopifyDone>,
+    pool: web::Data<Pool<ConnectionManager<PgConnection>>>,
     req: HttpRequest,
 ) -> impl Responder {
     let verified = verify_on_install(req.query_string().to_owned(), info.hmac.clone()); // .expect("Invalid hmac");
@@ -172,7 +176,9 @@ pub async fn shopify_done(
                 .json::<ShopifyAccessTokenRes>()
                 .await
                 .unwrap();
-            println!("Response: {:?}", response);
+            let pooled_conn = pool.get().expect("couldn't get db connection from pool");
+            let m = Merchant::new(&pooled_conn, info.shop.clone(), response.access_token);
+            println!("Saved merchant: {:?} {:?}", m.shop_domain, m.access_token);
             HttpResponse::Ok().body("Hello world!")
         }
         Ok(()) => unreachable!("Invalid nonce, expected=[{}] got=[{}]", nonce, info.state),

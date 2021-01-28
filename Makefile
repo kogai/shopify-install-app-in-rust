@@ -9,3 +9,6 @@ gql/schema.json:
 		--header="X-Shopify-Access-Token: $$SHOPIFY_ADMIN_API_GRAPHQL_SCHEMA_SECRET" \
 		--endpoint="https://graphql-schema-granted.myshopify.com/admin/api/2020-07/graphql.json" \
 		./gql/schema.json
+
+db:
+	docker-compose run --rm database psql -h database -U postgres -d postgres

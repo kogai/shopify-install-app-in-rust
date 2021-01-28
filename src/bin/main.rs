@@ -1,33 +1,22 @@
-use actix_session::{CookieSession};
-use actix_web::{ web, App, HttpServer};
-use app::{routes};
+use actix_session::CookieSession;
+use actix_web::{web, App, HttpServer};
+use app::routes;
+use diesel::pg::PgConnection;
+use diesel::r2d2::{ConnectionManager, Pool};
 use std::env;
+
+pub const DATABASE_URL: &str = env!("DATABASE_URL");
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // TODO: embed_migrations!
-    // use shopify_install_app_in_rust::schema::posts::dsl::*;
-    // let connection = establish_connection();
-    // let _post = create_post(
-    //     &connection,
-    //     "my title",
-    //     "this is good post i've never wrote.",
-    // );
-    // let results = posts
-    //     .limit(5)
-    //     .load::<Post>(&connection)
-    //     .expect("Error loading posts");
-    // println!("Displaying {} posts", results.len());
-    // for post in results {
-    //     println!("{}", post.title);
-    //     println!("----------\n");
-    //     println!("{}", post.body);
-    // }
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
+    let manager = ConnectionManager::<PgConnection>::new(DATABASE_URL);
+    let pool = Pool::builder().build(manager).expect("");
 
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .data(pool.clone())
             // TODO: Set key and force secure.
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .service(routes::shopify_start)
