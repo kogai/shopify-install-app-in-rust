@@ -2,23 +2,8 @@ use crate::env::SharedState;
 use crate::shopify::Shopify;
 use actix_session::Session;
 use actix_web::{get, http::header, web, HttpRequest, HttpResponse, Responder};
-use graphql_client::GraphQLQuery;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::Deserialize;
-
-#[derive(GraphQLQuery)]
-#[graphql(
-    schema_path = "gql/schema.json",
-    query_path = "gql/charge_query.graphql"
-)]
-
-pub struct ChargeQuery;
-
-pub fn charge() {
-    ChargeQuery::build_query(charge_query::Variables {
-        charge_id: "".to_owned(),
-    });
-}
 
 #[derive(Deserialize, Clone)]
 pub struct ShopifyStart {
