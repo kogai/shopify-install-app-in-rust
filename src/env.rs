@@ -8,14 +8,14 @@ pub const APP_URL: &str = env!("APP_URL");
 pub type DbPool = Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Debug, Clone)]
-struct Env {
-  app_id: String,
-  app_secret: String,
-  app_url: String,
+pub struct Env {
+  pub app_id: String,
+  pub app_secret: String,
+  pub app_url: String,
 }
 
 impl Env {
-  fn new(app_id: String, app_secret: String, app_url: String) -> Self {
+  pub fn new(app_id: String, app_secret: String, app_url: String) -> Self {
     Env {
       app_id,
       app_secret,
@@ -26,14 +26,14 @@ impl Env {
 
 #[derive(Clone)]
 pub struct SharedState {
-  conn: DbPool,
-  env: Env,
+  pub conn: DbPool,
+  pub env: Env,
 }
 
 impl Default for SharedState {
   fn default() -> Self {
     std::env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
-    std::env::set_var("RUST_BACKTRACE", "1");
+    // std::env::set_var("RUST_BACKTRACE", "1");
 
     let env = Env::new(
       env!("SHOPIFY_APP_ID").to_owned(),
