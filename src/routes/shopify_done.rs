@@ -1,9 +1,7 @@
-use crate::env::{APP_ID, APP_SECRET};
+use crate::env::{DbPool, APP_ID, APP_SECRET};
 use crate::models::Merchant;
 use actix_session::Session;
 use actix_web::{client::Client, get, web, HttpRequest, HttpResponse, Responder};
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
 use graphql_client::GraphQLQuery;
 use hmac::{crypto_mac::MacError, Hmac, Mac, NewMac};
 use serde::{Deserialize, Serialize};
@@ -101,7 +99,7 @@ pub struct ShopifyAccessTokenRes {
 pub async fn shopify_done(
   session: Session,
   info: web::Query<ShopifyDone>,
-  pool: web::Data<Pool<ConnectionManager<PgConnection>>>,
+  pool: web::Data<DbPool>,
   req: HttpRequest,
 ) -> impl Responder {
   let verified = verify_on_install(req.query_string().to_owned(), info.hmac.clone()); // .expect("Invalid hmac");

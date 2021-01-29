@@ -1,24 +1,18 @@
 use actix_session::CookieSession;
 use actix_web::{web, App, HttpServer};
-use app::routes;
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
+use app::{env::SharedState, routes};
 use std::env;
 
 pub const DATABASE_URL: &str = env!("DATABASE_URL");
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
-    // env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
-
-    let manager = ConnectionManager::<PgConnection>::new(DATABASE_URL);
-    let pool = Pool::builder().build(manager).expect("");
+    let state = SharedState::default;
 
     HttpServer::new(move || {
         App::new()
-            .data(pool.clone())
+            .data(state)
             // TODO: Set key and force secure.
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .service(routes::shopify_start::shopify_start)
