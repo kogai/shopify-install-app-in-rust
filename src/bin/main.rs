@@ -21,10 +21,10 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             // TODO: Set key and force secure.
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
-            .service(routes::shopify_start)
-            .service(routes::shopify_done)
-            .service(routes::echo)
-            .route("/hey", web::get().to(routes::manual_hello))
+            .service(routes::shopify_start::shopify_start)
+            .service(routes::shopify_done::shopify_done)
+            .service(routes::echo::echo)
+            .route("/hey", web::get().to(routes::manual_hello::manual_hello))
     })
     .bind("127.0.0.1:5000")?
     .run()
